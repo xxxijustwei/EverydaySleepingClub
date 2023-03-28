@@ -13,10 +13,10 @@ interface IAdminFacet {
 
     function setVoucher(address _addr) external;
 
-    function currency() external view returns (address);
+    function getCurrency() external view returns (address);
 
-    function randomizer() external view returns (address);
+    function getRandomizer() external view returns (address);
 
-    function voucher() external view returns (address);
+    function getVoucher() external view returns (address);
 
 }

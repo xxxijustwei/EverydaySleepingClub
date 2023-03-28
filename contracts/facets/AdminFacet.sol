@@ -71,15 +71,15 @@ contract AdminFacet is IAdminFacet {
         s.voucher = _addr;
     }
 
-    function currency() external view returns (address) {
+    function getCurrency() external view returns (address) {
         return s.currency;
     }
 
-    function randomizer() external view returns (address) {
+    function getRandomizer() external view returns (address) {
         return s.randomizer;
     }
 
-    function voucher() external view returns (address) {
+    function getVoucher() external view returns (address) {
         return s.voucher;
     }
 
