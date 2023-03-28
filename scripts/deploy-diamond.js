@@ -1,6 +1,6 @@
 const { getSelectors, FacetCutAction } = require('./libraries/diamond.js')
-async function main() {
 
+async function main() {
     const accounts = await ethers.getSigners()
     const contractOwner = accounts[0]
 
@@ -11,7 +11,7 @@ async function main() {
     console.log('DiamondCutFacet deployed:', diamondCutFacet.address)
 
     // deploy Diamond
-    const Diamond = await ethers.getContractFactory('Diamond')
+    const Diamond = await ethers.getContractFactory('LotteryDiamond')
     const diamond = await Diamond.deploy(contractOwner.address, diamondCutFacet.address)
     await diamond.deployed()
     console.log('Diamond deployed:', diamond.address)
@@ -30,8 +30,9 @@ async function main() {
     const FacetNames = [
         'DiamondLoupeFacet',
         'OwnershipFacet',
+        'AdminFacet',
         'AlgorithmFacet',
-        'CallFacet'
+        'GameFacet'
     ]
     const cut = []
     for (const FacetName of FacetNames) {
@@ -52,12 +53,12 @@ async function main() {
     const diamondCut = await ethers.getContractAt('IDiamondCut', diamond.address)
     let tx
     let receipt
-    const appStorage = {
+    const config = {
         intvals: [0, 5, 43, 431, 2946, 11552, 55712, 238045, 1590756, 20448182, 80014532, 177904515],
         rewards: [0, 1, 2, 5, 10, 20, 100, 1000, 10000, 50000, 100000, 500000, 1000000],
         fibonacci: [1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181, 6765, 10946]
     }
-    const functionCall = diamondInit.interface.encodeFunctionData("init", [appStorage])
+    const functionCall = diamondInit.interface.encodeFunctionData("init", [config])
     tx = await diamondCut.diamondCut(cut, diamondInit.address, functionCall)
     console.log('Diamond cut tx: ', tx.hash)
     receipt = await tx.wait()
