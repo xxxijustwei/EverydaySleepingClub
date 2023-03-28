@@ -12,3 +12,4 @@ artifacts
 .openzeppelin
 contract-address.ts
 scripts/ignore/*
+tasks/*/.address.json
