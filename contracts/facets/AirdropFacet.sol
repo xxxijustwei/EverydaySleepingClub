@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.17;
 
-import "@solvprotocol/erc-3525/ERC3525.sol";
+import "@solvprotocol/erc-3525/IERC3525.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
 import {AppStorage} from "../AppStorage.sol";
@@ -27,6 +27,6 @@ contract AirdropFacet {
     }
 
     function _root() internal pure returns (bytes32) {
-        return 0x933541ec91e721841516789f142b145bcfd742dc5dc2752d791ad49454355e52;
+        return 0x908a2921f890d94931db3a33178ebedcfac8e0c5c3f44d7516103ae554aa7949;
     }
 }
