@@ -31,6 +31,7 @@ async function main() {
         'DiamondLoupeFacet',
         'OwnershipFacet',
         'AdminFacet',
+        'AirdropFacet',
         'AlgorithmFacet',
         'GameFacet'
     ]
