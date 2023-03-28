@@ -8,7 +8,7 @@ interface IPlayground {
     event DividendPoolChange(uint indexed _slot, uint _total, uint _current, uint _value);
     event UserClaimDividend(address indexed _user, uint indexed _slot, uint _value);
 
-    function registerGame(uint _slot, address _game, address _descriptor, uint _sharesFunds) external;
+    function registerGame(uint _slot, address _game, uint _sharesFunds) external;
 
     function setEnable(uint _slot, bool _off) external;
     

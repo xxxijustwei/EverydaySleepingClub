@@ -104,15 +104,13 @@ contract EverydaySleepingClub is IPlayground, ERC3525Extended, Ownable {
         return enable[_slot];
     }
 
-    function registerGame(uint _slot, address _game, address _descriptor, uint _sharesFunds) external onlyOwner {
+    function registerGame(uint _slot, address _game, uint _sharesFunds) external onlyOwner {
         require(games[_slot] == address(0), "ESC: slot registered");
         require(_game != address(0), "ESC: game address cannot be zero");
 
         IGameFacet game = IGameFacet(_game);
         games[_slot] = _game;
         slotTotalSupply[_slot] = game.valuesTotalSupply() * 10**ERC3525.valueDecimals();
-
-        ERC3525Extended._updateSlotDescriptor(_slot, _descriptor);
 
         IERC20 currency = IERC20(game.currency());
         currency.transferFrom(_msgSender(), address(this), _sharesFunds);
