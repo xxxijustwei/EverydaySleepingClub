@@ -2,9 +2,10 @@
 import fs from "fs";
 // import { ethers, network } from "hardhat";
 import { task } from "hardhat/config"
-import keccak256 from "keccak256";
-import MerkleTree from "merkletreejs";
-import { CONTRACT_ADDRESS } from "../../contract-address";
+import keccak256 from "keccak256"
+import MerkleTree from "merkletreejs"
+import { CONTRACT_ADDRESS } from "../../contract-address"
+import { FacetCutAction, getSelectors } from "../../scripts/libraries/diamond"
 
 task("testnet-deploy", "deploy contract to local")
     .addOptionalParam("verify", "", false, types.boolean)
@@ -78,25 +79,6 @@ task("testnet-deploy", "deploy contract to local")
         const funcCall = diamondInit.interface.encodeFunctionData("init", [config])
         const cutFacet = await diamondCut.diamondCut(cut, diamondInit.address, funcCall)
         await cutFacet.wait();
-
-        if (verify) {
-            console.log(`   Verifying contract...`)
-            await run("verify:verify", {
-                address: diamond.address,
-                constructorArguments: [
-                    owner.address,
-                    diamondCutFacet.address
-                ]
-            })
-
-            for (const c of dUnverified) {
-                await run("verify:verify", {
-                    address: c,
-                })
-            }
-
-            console.log(`   Already verified!`)
-        }
         
         console.log(`✔️  Diamond done!`);
 
@@ -124,9 +106,23 @@ task("testnet-deploy", "deploy contract to local")
         const samoyedDescriptor = await samoyedDescriptorFactory.deploy();
         await samoyedDescriptor.deployTransaction.wait();
         console.log(`   SamoyedDescriptor deployed: ${samoyedDescriptor.address}`);
+        console.log(`✔️  Voucher done!`)
 
         if (verify) {
-            console.log(`   Verifying contract...`)
+            console.log(`\n🚧 Verifying contract...`)
+            await run("verify:verify", {
+                address: diamond.address,
+                constructorArguments: [
+                    owner.address,
+                    diamondCutFacet.address
+                ]
+            })
+            for (const c of dUnverified) {
+                await run("verify:verify", {
+                    address: c,
+                })
+            }
+
             await run("verify:verify", {
                 address: voucher.address
             })
@@ -139,9 +135,8 @@ task("testnet-deploy", "deploy contract to local")
                     Samoyed: samoyedLib.address
                 }
             })
-            console.log(`   Already verified!`)
+            console.log(`✔️  Already verified!`)
         }
-        console.log(`✔️  Voucher done!`)
 
         save(addresses)
 
@@ -189,6 +184,10 @@ task("testnet-deploy", "deploy contract to local")
         )
         await registerGame.wait();
         console.log(`   Voucher |  register game done!`)
+
+        const enableGame = await voucher.setEnable(100, true)
+        await enableGame.wait()
+        console.log(`   Voucher | enable game!`)
 
         const approveDiamond = await usdt.approve(diamond.address, bonus.add(jack))
         await approveDiamond.wait()

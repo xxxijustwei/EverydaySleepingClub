@@ -1,7 +1,6 @@
 // @ts-nocheck
 import fs from "fs";
-import { ethers, network } from "hardhat";
-// import { ethers } from "hardhat";
+// import { ethers, network } from "hardhat";
 import { task, types } from "hardhat/config";
 import { CONTRACT_ADDRESS } from "../../contract-address";
 
@@ -24,7 +23,7 @@ task("testnet-play", "")
         console.log(`times: ${times}`)
         console.log(`pay: ${ethers.utils.formatUnits(pay, decimals)}`)
 
-        const approve = await usdt.connect(accounts[index]).approve(sft.address, pay)
+        const approve = await usdt.connect(accounts[index]).approve(voucher.address, pay)
         await approve.wait()
         console.log(`usdt approved`)
 
