@@ -8,6 +8,8 @@ library Events {
 
     event JackpotDividends(uint previous, uint current, uint value);
 
+    event ClaimAirdrop(address indexed user, uint indexed value);
+
     event InitLotteryPot(address indexed admin, uint bonusPot, uint jackPot);
     event WithdrawLotteryPot(address indexed admin, address indexed receiver, uint funds);
 }

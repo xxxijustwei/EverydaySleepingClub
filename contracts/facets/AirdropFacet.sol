@@ -24,6 +24,8 @@ contract AirdropFacet {
 
         IERC3525 sft = IERC3525(s.voucher);
         sft.transferFrom(1, msg.sender, _quantity);
+
+        emit ClaimAirdrop(msg.sender, _quantity);
     }
 
     function _root() internal pure returns (bytes32) {
