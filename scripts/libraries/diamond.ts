@@ -1,6 +1,7 @@
+// @ts-nocheck
+
 /* global ethers */
 
-import { ethers } from "hardhat";
 import { FunctionFragment, ErrorFragment } from "@ethersproject/abi";
 
 //func:string;
