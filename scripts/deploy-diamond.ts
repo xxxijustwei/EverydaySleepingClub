@@ -1,8 +1,9 @@
-const { getSelectors, FacetCutAction } = require('./libraries/diamond.js')
+import { ethers } from "hardhat";
+import { FacetCutAction, getSelectors } from "./libraries/diamond";
 
 async function main() {
     const accounts = await ethers.getSigners()
-    const contractOwner = accounts[0]
+    const owner = accounts[0]
 
     //  deploy DiamondCutFacet
     const DiamondCutFacet = await ethers.getContractFactory('DiamondCutFacet')
@@ -12,7 +13,7 @@ async function main() {
 
     // deploy Diamond
     const Diamond = await ethers.getContractFactory('LotteryDiamond')
-    const diamond = await Diamond.deploy(contractOwner.address, diamondCutFacet.address)
+    const diamond = await Diamond.deploy(owner.address, diamondCutFacet.address)
     await diamond.deployed()
     console.log('Diamond deployed:', diamond.address)
 

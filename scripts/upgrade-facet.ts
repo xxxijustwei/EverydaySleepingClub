@@ -1,5 +1,6 @@
-const { getSelectors, FacetCutAction } = require('./libraries/diamond.js')
-const { CONTRACT_ADDRESS } = require("../contract-address");
+import { ethers, network } from "hardhat"
+import { CONTRACT_ADDRESS } from "../contract-address"
+import { FacetCutAction, getSelectors } from "./libraries/diamond"
 
 async function main() {
     const diamondCut = await ethers.getContractAt('IDiamondCut', CONTRACT_ADDRESS[network.name]["Diamond"])
