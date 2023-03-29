@@ -1,31 +1,37 @@
 // @ts-nocheck
 import fs from "fs";
+import { ethers, network } from "hardhat";
 // import { ethers } from "hardhat";
 import { task, types } from "hardhat/config";
 import { CONTRACT_ADDRESS } from "../../contract-address";
 
 task("testnet-play", "")
     .addParam("index", "", 0, types.int)
-    .addParam("count", "", 1, types.int)
+    .addParam("times", "", 1, types.int)
     .setAction(async (args) => {
-        const address = get_contract_address();
-        const accounts = await ethers.getSigners();
+        console.log(`\n🚧 play game...`)
+        const address = get_contract_address()
+        const accounts = await ethers.getSigners()
         
-        const usdt = await ethers.getContractAt("MockUSDT", CONTRACT_ADDRESS["testnet"]["USDT"]);
-        const sft = await ethers.getContractAt("I3abyDogClub", address["SFT"]);
+        const usdt = await ethers.getContractAt("MockUSDT", CONTRACT_ADDRESS[network.name]["USDT"])
+        const voucher = await ethers.getContractAt("EverydaySleepingClub", address["Voucher"])
 
-        const index = args.index;
-        const count = args.count;
-        const decimals = await usdt.decimals();
+        const index = args.index
+        const times = args.times
+        const decimals = await usdt.decimals()
+        const pay = ethers.BigNumber.from(10).pow(decimals).mul(times).mul(2)
+        console.log(`player: ${accounts[index].address}`)
+        console.log(`times: ${times}`)
+        console.log(`pay: ${ethers.utils.formatUnits(pay, decimals)}`)
 
-        const price = ethers.BigNumber.from(10).pow(decimals).mul(count).mul(2);
-        const approve = await usdt.connect(accounts[index]).approve(sft.address, price);
-        await approve.wait();
+        const approve = await usdt.connect(accounts[index]).approve(sft.address, pay)
+        await approve.wait()
+        console.log(`usdt approved`)
 
-        const play = await sft.connect(accounts[index]).play(accounts[index].address, 100, count);
-        await play.wait();
+        const play = await voucher.connect(accounts[index]).play(accounts[index].address, 100, times)
+        await play.wait()
 
-        console.log("done!");
+        console.log("play done!")
     })
 
 function get_contract_address() {
