@@ -4,6 +4,7 @@ pragma solidity ^0.8.17;
 import "@solvprotocol/erc-3525/IERC3525.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
+import { Events } from "../libraries/Events.sol";
 import {AppStorage} from "../AppStorage.sol";
 
 contract AirdropFacet {
@@ -25,7 +26,7 @@ contract AirdropFacet {
         IERC3525 sft = IERC3525(s.voucher);
         sft.transferFrom(1, msg.sender, _quantity);
 
-        emit ClaimAirdrop(msg.sender, _quantity);
+        emit Events.ClaimAirdrop(msg.sender, _quantity);
     }
 
     function _root() internal pure returns (bytes32) {
