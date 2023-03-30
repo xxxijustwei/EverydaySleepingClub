@@ -1,8 +1,9 @@
 // @ts-nocheck
-import fs from "fs";
-// import { ethers, network } from "hardhat";
-import { task, types } from "hardhat/config";
-import { CONTRACT_ADDRESS } from "../../contract-address";
+import fs from "fs"
+// import { ethers, network } from "hardhat"
+import { task, types } from "hardhat/config"
+import { CONTRACT_ADDRESS } from "../../contract-address"
+import Randomizer from "../../scripts/abi/randomizer.json"
 
 task("testnet-play", "")
     .addParam("index", "", 0, types.int)
@@ -27,7 +28,17 @@ task("testnet-play", "")
         await approve.wait()
         console.log(`usdt approved`)
 
-        const play = await voucher.connect(accounts[index]).play(accounts[index].address, 100, times)
+        const randomizer = new ethers.Contract(CONTRACT_ADDRESS[network.name]["VRF"], Randomizer.abi, accounts[0])
+        const fee = await randomizer['estimateFee(uint256)'](4000 + times * 2800)
+
+        const play = await voucher.connect(accounts[index]).play(
+            accounts[index].address, 
+            100, 
+            times, 
+            {
+                value: fee
+            }
+        )
         await play.wait()
 
         console.log("play done!")
