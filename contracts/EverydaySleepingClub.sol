@@ -14,6 +14,10 @@ import "./interfaces/lottery/IAdminFacet.sol";
 
 contract EverydaySleepingClub is IPlayground, ERC3525Extended, Ownable {
 
+    error InsufficientFee();
+
+    address _randomizer;
+
     mapping(uint => address) public games;
     mapping(uint => bool) public enable;
     mapping(uint => uint) public slotTotalSupply;
@@ -34,24 +38,21 @@ contract EverydaySleepingClub is IPlayground, ERC3525Extended, Ownable {
 
     constructor() ERC3525Extended("EverydaySleepingClub", "ESC", 6) {}
 
-    function play(address _to, uint _slot, uint _count) external payable isSlotExists(_slot) canPlay(_slot) {
+    function play(address _to, uint _slot, uint _times) external payable isSlotExists(_slot) canPlay(_slot) {
         IGameFacet game = IGameFacet(games[_slot]);
-        IERC20 currency = IERC20(game.currency());
+        if (msg.value < game.estimateFee(_times)) revert InsufficientFee();
 
-        uint256 payin = game.price() * _count;
+        IERC20 currency = IERC20(game.currency());
+        uint256 payin = game.price() * _times;
         uint capital = payin / 100 * game.voucherRatio();
         currency.transferFrom(_msgSender(), address(this), payin);
         currency.transfer(games[_slot], payin - capital);
 
         sharesPool[_slot] += capital;
 
-        (bool ok, bytes memory data) = games[_slot].call{value: msg.value, gas: 30000}(
-            abi.encodeWithSignature("play(address,uint256)", _to, _count)
-        );
-        require(ok);
+        uint amount = game.play(_to, _times);
 
         if (ERC3525Extended._slotCurrentSupply(_slot) < slotTotalSupply[_slot]) {
-            uint amount = abi.decode(data, (uint256));
             amount = _mintValue(_to, _slot, amount);
             emit UserMintShares(_to, _slot, amount);
         }
@@ -116,6 +117,10 @@ contract EverydaySleepingClub is IPlayground, ERC3525Extended, Ownable {
         currency.transferFrom(_msgSender(), address(this), _sharesFunds);
         _mintValue(_game, _slot, game.premitQuantity() * 10**ERC3525.valueDecimals());
         sharesPool[_slot] += _sharesFunds;
+    }
+
+    function withdrawFees(address _to, uint _value) external onlyOwner {
+        payable(_to).transfer(_value);
     }
 
     function getUserSharesValue(address _user, uint _slot) external view returns (uint) {

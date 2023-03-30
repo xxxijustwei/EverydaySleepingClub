@@ -8,9 +8,9 @@ interface IRandomizer {
         external
         returns (uint256);
 
-    function estimateFee(uint256 callbackGasLimit) external returns (uint256);
+    function estimateFee(uint256 callbackGasLimit) external view returns (uint256);
 
-    function estimateFee(uint256 callbackGasLimit, uint256 confirmations) external returns (uint256);
+    function estimateFee(uint256 callbackGasLimit, uint256 confirmations) external view returns (uint256);
 
     function clientWithdrawTo(address _to, uint256 _amount) external;
 }

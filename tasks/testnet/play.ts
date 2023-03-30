@@ -28,9 +28,14 @@ task("testnet-play", "")
         await approve.wait()
         console.log(`usdt approved`)
 
+        const feeData = await ethers.provider.getFeeData()
+        const gasLimit = 4000 + times * 2800
         const randomizer = new ethers.Contract(CONTRACT_ADDRESS[network.name]["VRF"], Randomizer.abi, accounts[0])
-        const fee = await randomizer['estimateFee(uint256)'](4000 + times * 2800)
+        const fee = await randomizer.estimateFeeUsingGasPrice(gasLimit, feeData.gasPrice)
 
+        console.log(`play gas limit: ${gasLimit}`)
+        console.log(`play fee: ${ethers.utils.formatEther(fee)}`)
+        
         const play = await voucher.connect(accounts[index]).play(
             accounts[index].address, 
             100, 

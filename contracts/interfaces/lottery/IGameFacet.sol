@@ -3,7 +3,9 @@ pragma solidity ^0.8.17;
 
 interface IGameFacet {
 
-    function play(address _player, uint _count) external payable returns (uint quantity);
+    function play(address _player, uint _count) external returns (uint quantity);
+
+    function estimateFee(uint times) external view returns (uint);
 
     function price() external view returns (uint);
 

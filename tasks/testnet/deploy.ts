@@ -18,7 +18,7 @@ task("testnet-deploy", "deploy contract to local")
             return
         }
 
-        console.log(`🌐 Network: ${network.name}`)
+        console.log(`\n🌐 Network: ${network.name}`)
 
         console.log(`\n💻 Compiling contract...\n`)
         await run("compile")
@@ -107,36 +107,6 @@ task("testnet-deploy", "deploy contract to local")
         await samoyedDescriptor.deployTransaction.wait();
         console.log(`   SamoyedDescriptor deployed: ${samoyedDescriptor.address}`);
         console.log(`✔️  Voucher done!`)
-
-        if (verify) {
-            console.log(`\n🚧 Verifying contract...`)
-            await run("verify:verify", {
-                address: diamond.address,
-                constructorArguments: [
-                    owner.address,
-                    diamondCutFacet.address
-                ]
-            })
-            for (const c of dUnverified) {
-                await run("verify:verify", {
-                    address: c,
-                })
-            }
-
-            await run("verify:verify", {
-                address: voucher.address
-            })
-            await run("verify:verify", {
-                address: sftDescriptor.address
-            })
-            await run("verify:verify", {
-                address: samoyedDescriptor.address,
-                libraries: {
-                    Samoyed: samoyedLib.address
-                }
-            })
-            console.log(`✔️  Already verified!`)
-        }
 
         save(addresses)
 
@@ -240,6 +210,36 @@ task("testnet-deploy", "deploy contract to local")
         }
 
         console.log(`✔️  Airdrop done!`)
+
+        if (verify) {
+            console.log(`\n🚧 Verifying contract...`)
+            await run("verify:verify", {
+                address: diamond.address,
+                constructorArguments: [
+                    owner.address,
+                    diamondCutFacet.address
+                ]
+            })
+            for (const c of dUnverified) {
+                await run("verify:verify", {
+                    address: c,
+                })
+            }
+
+            await run("verify:verify", {
+                address: voucher.address
+            })
+            await run("verify:verify", {
+                address: sftDescriptor.address
+            })
+            await run("verify:verify", {
+                address: samoyedDescriptor.address,
+                libraries: {
+                    Samoyed: samoyedLib.address
+                }
+            })
+            console.log(`✔️  Already verified!`)
+        }
     });
 
 function save(address: { [key: string]: string }) {

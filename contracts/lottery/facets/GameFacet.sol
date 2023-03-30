@@ -18,15 +18,14 @@ contract GameFacet is IGameFacet {
     error Unauthorized();
     error AddressIsZero();
     error InvalidTimes();
-    error InsufficientFee();
+    
 
-    function play(address _player, uint256 _times) external payable returns (uint quantity) {
+    function play(address _player, uint256 _times) external returns (uint quantity) {
         if (msg.sender != s.voucher) revert Unauthorized();
         if (_player == address(0)) revert AddressIsZero();
         if (_times > 100) revert InvalidTimes();
 
-        uint256 gasLimit = 40000 + _times * 2800;
-        if (msg.value < _randomizer().estimateFee(gasLimit)) revert InsufficientFee();
+        uint256 gasLimit = _playGasLimit(_times);
 
         IERC20Metadata usdt = _currency();
         uint256 payin = _price() * _times;
@@ -66,7 +65,8 @@ contract GameFacet is IGameFacet {
     }
 
     function randomizerCallback(uint256 _id, bytes32 _value) external {
-        if (msg.sender != address(_randomizer())) revert Unauthorized();
+        uint gas = gasleft();
+        if (msg.sender != s.randomizer) revert Unauthorized();
 
         LotteryRequest memory req = s.playerRequest[_id];
         (uint256 result, uint256 bonus, uint256 jack) = IAlgorithmFacet(
@@ -99,6 +99,16 @@ contract GameFacet is IGameFacet {
         s.protocolIncome = s.protocolIncome + (bonusTax + jackTax);
 
         emit Events.LotteryResult(req.player, result, bonus, jack);
+        gas = gas - gasleft();
+        emit Events.CallbackGasUse(gas);
+    }
+
+    function estimateFee(uint times) external view returns (uint) {
+        return _randomizer().estimateFee(_playGasLimit(times));
+    }
+
+    function _playGasLimit(uint _times) internal pure returns (uint) {
+        return 40000 + _times * 2800;
     }
 
     function _next(uint256 a, uint256 b) internal pure returns (uint256, uint256) {

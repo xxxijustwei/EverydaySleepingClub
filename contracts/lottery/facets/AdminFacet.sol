@@ -51,10 +51,10 @@ contract AdminFacet is IAdminFacet {
         emit Events.WithdrawLotteryPot(msg.sender, _to, _value);
     }
 
-    function withdrawFees(address _to, uint _value) external {
-        LibDiamond.enforceIsContractOwner();
-        payable(_to).transfer(_value);
-    }
+    // function withdrawFees(address _to, uint _value) external {
+    //     LibDiamond.enforceIsContractOwner();
+    //     payable(_to).transfer(_value);
+    // }
 
     function randomizerWithdraw(address _user, uint256 _amount) external {
         LibDiamond.enforceIsContractOwner();
