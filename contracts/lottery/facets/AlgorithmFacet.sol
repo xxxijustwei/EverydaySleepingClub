@@ -3,7 +3,7 @@ pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/utils/math/Math.sol";
 
-import {IAlgorithmFacet} from "../interfaces/IAlgorithmFacet.sol";
+import {IAlgorithmFacet} from "../../interfaces/lottery/IAlgorithmFacet.sol";
 import {Constants} from "../libraries/Constants.sol";
 import {AppStorage} from "../AppStorage.sol";
 

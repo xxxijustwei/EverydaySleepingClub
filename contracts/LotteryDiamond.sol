@@ -10,7 +10,7 @@ pragma solidity ^0.8.0;
 
 import {LibDiamond} from "./libraries/LibDiamond.sol";
 import {IDiamondCut} from "./interfaces/IDiamondCut.sol";
-import {Events} from "./libraries/Events.sol";
+import {Events} from "./lottery/libraries/Events.sol";
 
 contract LotteryDiamond {
     constructor(address _contractOwner, address _diamondCutFacet) payable {

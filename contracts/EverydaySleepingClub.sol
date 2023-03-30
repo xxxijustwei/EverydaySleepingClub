@@ -8,9 +8,9 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 import "./extend/ERC3525Extended.sol";
-import "./interfaces/IPlayground.sol";
-import "./interfaces/IGameFacet.sol";
-import "./interfaces/IAdminFacet.sol";
+import "./interfaces/voucher/IPlayground.sol";
+import "./interfaces/lottery/IGameFacet.sol";
+import "./interfaces/lottery/IAdminFacet.sol";
 
 contract EverydaySleepingClub is IPlayground, ERC3525Extended, Ownable {
 

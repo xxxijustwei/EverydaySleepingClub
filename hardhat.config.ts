@@ -9,7 +9,8 @@ import "./tasks";
 const dotenvConfigPath: string = process.env.DOTENV_CONFIG_PATH || "./.env";
 dotenvConfig({ path: resolve(__dirname, dotenvConfigPath) });
 
-const { 
+const {
+  DEFAULT_NETWORK,
   MNEMONIC,
   ARBITRUM_API_KEY,
   MOONBEAM_API_KEY,
@@ -33,7 +34,7 @@ const config: HardhatUserConfig = {
       },
     }
   },
-  defaultNetwork: "arbitrumGoerli",
+  defaultNetwork: DEFAULT_NETWORK,
   networks: {
     moonbaseAlpha: {
       url: 'https://rpc.testnet.moonbeam.network',

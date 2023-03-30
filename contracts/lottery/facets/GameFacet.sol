@@ -5,10 +5,10 @@ import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import "@solvprotocol/erc-3525/IERC3525.sol";
 
 import {AppStorage} from "../AppStorage.sol";
-import {IGameFacet} from "../interfaces/IGameFacet.sol";
-import {IRandomizer} from "../interfaces/IRandomizer.sol";
-import {IPlayground} from "../interfaces/IPlayground.sol";
-import {IAlgorithmFacet} from "../interfaces/IAlgorithmFacet.sol";
+import {IGameFacet} from "../../interfaces/lottery/IGameFacet.sol";
+import {IAlgorithmFacet} from "../../interfaces/lottery/IAlgorithmFacet.sol";
+import {IPlayground} from "../../interfaces/voucher/IPlayground.sol";
+import {IRandomizer} from "../../interfaces/IRandomizer.sol";
 import {Events} from "../libraries/Events.sol";
 import "../libraries/Structs.sol";
 

@@ -3,9 +3,9 @@ pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import { IAdminFacet } from "../interfaces/IAdminFacet.sol";
-import { IRandomizer } from "../interfaces/IRandomizer.sol";
-import { LibDiamond } from "../libraries/LibDiamond.sol";
+import { IAdminFacet } from "../../interfaces/lottery/IAdminFacet.sol";
+import { IRandomizer } from "../../interfaces/IRandomizer.sol";
+import { LibDiamond } from "../../libraries/LibDiamond.sol";
 import { Events } from "../libraries/Events.sol";
 import { AppStorage } from "../AppStorage.sol";
 
