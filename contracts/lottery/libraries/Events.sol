@@ -12,6 +12,5 @@ library Events {
 
     event InitLotteryPot(address indexed admin, uint bonusPot, uint jackPot);
     event WithdrawLotteryPot(address indexed admin, address indexed receiver, uint funds);
-
-    event CallbackGasUse(uint indexed gas);
+    
 }
