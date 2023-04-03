@@ -5,11 +5,9 @@ import "@solvprotocol/erc-3525/IERC3525.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
 import { Events } from "../libraries/Events.sol";
-import {AppStorage} from "../AppStorage.sol";
+import { AppStorage } from "../AppStorage.sol";
 
 contract AirdropFacet {
-
-    AppStorage s;
 
     error AirdropOnlyClaimOnce();
     error NotEligible();
@@ -17,6 +15,8 @@ contract AirdropFacet {
     function claim(uint256 _quantity, bytes32[] calldata merkleProof)
         external
     {
+        AppStorage.State storage s = AppStorage.get();
+
         if (s.claim[msg.sender]) revert AirdropOnlyClaimOnce();
         bytes32 leaf = keccak256(abi.encodePacked(msg.sender, _quantity));
         if (!MerkleProof.verify(merkleProof, _root(), leaf)) revert NotEligible();

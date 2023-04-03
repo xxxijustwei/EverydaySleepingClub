@@ -16,8 +16,6 @@ contract EverydaySleepingClub is IPlayground, ERC3525Extended, Ownable {
 
     error InsufficientFee();
 
-    address _randomizer;
-
     mapping(uint => address) public games;
     mapping(uint => bool) public enable;
     mapping(uint => uint) public slotTotalSupply;

@@ -34,8 +34,6 @@ library Uint8a32 {
 contract AlgorithmFacet {
     using Uint8a32 for uint256;
 
-    AppStorage s;
-
     function calculateLotteryReward(
         uint256 _seed,
         uint256 _count,
@@ -51,6 +49,8 @@ contract AlgorithmFacet {
             uint256 jack
         )
     {
+        AppStorage.State storage s = AppStorage.get();
+        
         unchecked {
             uint256 jackpotThreshold = _getJackThreshold(
                 _jackPool / 10**_decimals
@@ -118,6 +118,8 @@ contract AlgorithmFacet {
             return 12;
         }
 
+        AppStorage.State storage s = AppStorage.get();
+
         unchecked {
             uint256 lo = 0;
             uint256 hi = Constants.INTVALS_LENGTH - 1;
@@ -134,6 +136,8 @@ contract AlgorithmFacet {
     }
 
     function _findNextFibonacci(uint256 input) internal view returns (uint256) {
+        AppStorage.State storage s = AppStorage.get();
+
         unchecked {
             uint256 low = 0;
             uint256 high = Constants.FIBONACCI_LENGTH - 1;

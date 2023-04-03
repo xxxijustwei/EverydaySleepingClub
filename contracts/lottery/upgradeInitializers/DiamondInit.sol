@@ -22,16 +22,19 @@ import { AppStorage } from "../AppStorage.sol";
 contract DiamondInit {
 
     struct Config {
+        uint cyclePrevious;
+        uint cycleCurrent;
         uint[] intvals;
         uint[] rewards;
         uint[] fibonacci;
     }
 
-    AppStorage s;
-
     // You can add parameters to this function in order to pass in 
     // data to set your own state variables
     function init(Config memory config) external {
+        AppStorage.State storage s = AppStorage.get();
+        s.cyclePrevious = config.cyclePrevious;
+        s.cycleCurrent = config.cycleCurrent;
         s.intvals = config.intvals;
         s.rewards = config.rewards;
         s.fibonacci = config.fibonacci;

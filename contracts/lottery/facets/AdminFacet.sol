@@ -11,8 +11,6 @@ import { AppStorage } from "../AppStorage.sol";
 
 contract AdminFacet is IAdminFacet {
 
-    AppStorage s;
-
     error WithdrawOverPot();
     error InsufficientLiquidity();
     error FundsIsZero();
@@ -22,6 +20,8 @@ contract AdminFacet is IAdminFacet {
 
         if (_bonusPot == 0) revert FundsIsZero();
         if (_jackPot == 0) revert FundsIsZero();
+
+        AppStorage.State storage s = AppStorage.get();
 
         uint total = _bonusPot + _jackPot;
         _currency().transferFrom(msg.sender, address(this), total);
@@ -34,6 +34,8 @@ contract AdminFacet is IAdminFacet {
 
     function withdrawPot(address _to, uint _value) external {
         LibDiamond.enforceIsContractOwner();
+
+        AppStorage.State storage s = AppStorage.get();
 
         if (s.basePot < _value) revert WithdrawOverPot();
         if (s.bonusPot + s.jackPot < _value) revert InsufficientLiquidity();
@@ -51,44 +53,39 @@ contract AdminFacet is IAdminFacet {
         emit Events.WithdrawLotteryPot(msg.sender, _to, _value);
     }
 
-    // function withdrawFees(address _to, uint _value) external {
-    //     LibDiamond.enforceIsContractOwner();
-    //     payable(_to).transfer(_value);
-    // }
-
     function randomizerWithdraw(address _user, uint256 _amount) external {
         LibDiamond.enforceIsContractOwner();
-        IRandomizer(s.randomizer).clientWithdrawTo(_user, _amount);
+        IRandomizer(AppStorage.get().randomizer).clientWithdrawTo(_user, _amount);
     }
 
     function setCurrency(address _addr) external {
         LibDiamond.enforceIsContractOwner();
-        s.currency = _addr;
+        AppStorage.get().currency = _addr;
     }
 
     function setRandomizer(address _addr) external {
         LibDiamond.enforceIsContractOwner();
-        s.randomizer = _addr;
+        AppStorage.get().randomizer = _addr;
     }
 
     function setVoucher(address _addr) external {
         LibDiamond.enforceIsContractOwner();
-        s.voucher = _addr;
+        AppStorage.get().voucher = _addr;
     }
 
     function getCurrency() external view returns (address) {
-        return s.currency;
+        return AppStorage.get().currency;
     }
 
     function getRandomizer() external view returns (address) {
-        return s.randomizer;
+        return AppStorage.get().randomizer;
     }
 
     function getVoucher() external view returns (address) {
-        return s.voucher;
+        return AppStorage.get().voucher;
     }
 
     function _currency() internal view returns (IERC20) {
-        return IERC20(s.currency);
+        return IERC20(AppStorage.get().currency);
     }
 }
